@@ -14,6 +14,48 @@ https://github.com/hplgit/preprocess.git.
 | Dependencies    | [python-future](http://python-future.org) |
 | Author          | Trent Mick                               |
 
+## Modifications for Racket, Prolog, and Swift files
+
+modified 11-2023 by T. Houpt to handle .rkt, .prolog, .pro, and .swift files
+with the appropriate comment lines
+
+Note: to allow e.g. racket to work with files decorated with preprocess directives,
+lines that should be commented out during development are prefixed with `;#` which
+should be removed after processing with awk.
+
+For example, for the following test.rkt with preprocess directives
+to remove contracts in production version:
+
+```
+(provide
+;#if PRODUCTION
+;#     vector-reverse
+;#else
+ (proc-doc/names vector-reverse (-> vector? vector?)
+                 (vec) 
+                 @{ new vector with order of elements reserved })
+
+;#endif
+)
+```
+
+Should run the following preprocess and awk commands.
+
+```
+preprocess -D PRODUCTION=true test.rkt | awk '{ sub(/^;#/, ""); print }' > prod_test.rkt
+
+```
+
+resulting in
+
+```
+(provide
+     vector-reverse
+)
+```
+
+see below for installation instructions, to get a  copy of `preprocess` binary into usr/local/bin
+
 ## Why preprocess.py?
 
 There are millions of templating systems out there (most of them

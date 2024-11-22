@@ -1,0 +1,18 @@
+(provide
+
+; #ifdef DEVELOPMENT
+
+		;; inline documentation and contract
+		(proc-doc/names  events-count (->* ( (vectorof event?)  () exact-nonnegative-integer?)
+         	        ((events) ())
+           	      @{ returns the length of a vector of events })
+
+; #else
+; remove ;# with awk '{ sub(/^;#/, ""); print }' test.p.rkt
+
+	;; plain function export without contract
+	events-count 
+
+; #endif
+
+) ; end provide
